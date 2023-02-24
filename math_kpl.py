@@ -4,7 +4,7 @@
 """
 @File        :math_kpl.py
 @Desc        :
-@Date        :2021-02-24 15:30
+@Date        :2023-02-24 15:30
 @Author      :noBody
 """
 
@@ -100,6 +100,24 @@ def generate_duel(teama,teamb):
                 continue
             duel[f'{i.name}:{j.name}']=[i,j]
     return duel
+
+res ={
+    "XYG:DYG":"0:0",
+    "XYG:HERO":"0:0",
+    "XYG:WOLVE":"0:0",
+    "XYG:TESA":"0:0",
+    "XYG:KSG":"0:0",
+    "DYG:HERO":"0:0",
+    "DYG:WOLVE":"0:0",
+    "DYG:TESA":"0:0",
+    "DYG:KSG":"0:0",
+    "HERO:WOLVE":"0:0",
+    "HERO:TESA":"0:0",
+    "HERO:KSG":"0:0",
+    "WOLVE:TESA":"0:0",
+    "WOLVE:KSG":"0:0",
+    "TESA:KSG":"0:0",
+}
 
 if __name__ == "__main__":
     XYG = KplTeam("XYG")
