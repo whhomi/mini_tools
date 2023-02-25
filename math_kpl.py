@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 """
@@ -8,6 +7,7 @@
 @Author      :noBody
 """
 
+import json
 
 
 
@@ -53,6 +53,7 @@ class KplTeam :
             }
         return current_info
 
+
 class Play:
 
     play_method = ['do_win_small','do_defeat_small']
@@ -89,73 +90,41 @@ class Play:
             obj = getattr(self,f"_team{suffix}")
             obj.new_big_one()
 
-def generate_duel(teama,teamb):
-    duel = {}
-    for i in teama:
-        for j in teamb:
-            if i is j:
-                continue
-            ij_reverse = f'{j.name}:{i.name}'
-            if ij_reverse in duel:
-                continue
-            duel[f'{i.name}:{j.name}']=[i,j]
-    return duel
+def generate_duel(team_socre:dict):
+    play_list = []
+    team_dict = {}
+    for k,v in team_socre.items():
+        teama,teamb = [i.strip() for i in k.split(":")]
+        if teama not in team_dict :
+            kpl_a = KplTeam(teama)
+            team_dict[teama] = kpl_a
+        else: 
+            kpl_a = team_dict[teama] 
+        if teamb not in team_dict :
+            kpl_b = KplTeam(teamb)
+            team_dict[teamb] = kpl_b
+        else :
+            kpl_b = team_dict[teamb]
+        play_one = [kpl_a, kpl_b, v]
+        play_list.append(play_one)
+    return play_list,team_dict
 
-res ={
-    "XYG:DYG":"0:0",
-    "XYG:HERO":"0:0",
-    "XYG:WOLVE":"0:0",
-    "XYG:TESA":"0:0",
-    "XYG:KSG":"0:0",
-    "DYG:HERO":"0:0",
-    "DYG:WOLVE":"0:0",
-    "DYG:TESA":"0:0",
-    "DYG:KSG":"0:0",
-    "HERO:WOLVE":"0:0",
-    "HERO:TESA":"0:0",
-    "HERO:KSG":"0:0",
-    "WOLVE:TESA":"0:0",
-    "WOLVE:KSG":"0:0",
-    "TESA:KSG":"0:0",
-}
+def read_json(file_path):
+    with open(file_path) as fj:
+        res = json.load(fj)
+    plays, team_dict = generate_duel(res)
+    return plays, team_dict
 
 if __name__ == "__main__":
-    XYG = KplTeam("XYG")
-    DYG = KplTeam("DYG")
-    HERO = KplTeam("HERO")
-    WOLVE = KplTeam("WOLVE")
-    TESA = KplTeam("TESA")
-    KSG = KplTeam("KSG")
-    
-    team = [XYG,DYG,HERO,WOLVE,TESA,KSG]
-    pg = generate_duel(team,team)
-    for k,v in pg.items():
-        print(k)
-        
-    Play(XYG,DYG,"0:3")
-    Play(XYG,KSG,"2:3")
-    Play(XYG,WOLVE,"0:3")
-    # Play(XYG,HERO,"3:2")
-    # Play(XYG,TESA,"3:2")
-
-    # Play(WOLVE,KSG,"3:0")
-    # Play(WOLVE,DYG,"3:0")
-    Play(WOLVE,HERO,"3:2")
-    # Play(WOLVE,TESA,"3:0")
-
-    # Play(KSG,DYG,"3:0")
-    Play(KSG,HERO,"2:3")
-    Play(KSG,TESA,"3:1")
-
-    Play(DYG,HERO,"2:3")
-    Play(DYG,TESA,"2:3")
-
-    Play(HERO,TESA,"2:3")
-
-    print(XYG.current)
-    print(WOLVE.current)
-    print(KSG.current)
-    print(DYG.current)
-    print(HERO.current)
-    print(TESA.current)
-    
+    plays_args, team_dict = read_json("./play.json")
+    for play_args in plays_args:
+        if "0:0" in play_args:
+            continue
+        Play(*play_args)
+    socre_list = []
+    for _,v in team_dict.items():
+        socre_list.append(v.current)
+    g =  lambda x:(x['big_win'],x['small_point'])
+    socre_list.sort(key=g,reverse=True)
+    for socre in socre_list:
+        print("队伍: {}\t 大局得分: {} \t小局得分: {} ".format(socre["name"],socre["big_win"],socre["small_point"]))
