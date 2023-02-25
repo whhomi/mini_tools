@@ -1,0 +1,25 @@
+{
+    "XYG:WOLVE"   :  "0:3",
+    "DYG:TESA"    :  "2:3",
+    "HERO:KSG"    :  "3:2",
+
+    "XYG:DYG"     :  "0:3",
+    "TESA:KSG"    :  "1:3",
+    "HERO:WOLVE"  :  "2:3",
+
+    "XYG:KSG"     :  "2:3",
+    "DYG:HERO"    :  "1:3",
+    "WOLVE:TESA"  :  "3:0",
+
+
+
+
+    "XYG:HERO"    :  "0:0",
+    "DYG:WOLVE"   :  "0:0",
+    
+    "HERO:TESA"   :  "0:0",
+    "DYG:KSG"     :  "0:0",
+    
+    "WOLVE:KSG"   :  "0:0",
+    "XYG:TESA"    :  "0:0"
+}
